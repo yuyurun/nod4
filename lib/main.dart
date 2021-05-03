@@ -109,6 +109,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
   bool _isComposing = false; 
   bool _edit = false;
   Color _editbuttoncollor = Colors.white;
+  final myFocusNode = FocusNode();
 
   String getTodayDate() {
     initializeDateFormatting('ja');
@@ -161,12 +162,6 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
                 itemCount: _messages.length,
               ),
             ),
-            //Divider(height: 1.0),
-            //Container(
-            //  decoration: BoxDecoration(
-            //    color: Colors.white),//Theme.of(context).cardColor),
-            //    child: _writeButton(),//_buildTextComposer(),
-            //),
           ],
         ),
         decoration: Theme.of(context).platform == TargetPlatform.iOS 
@@ -185,6 +180,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
           elevation:
             Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
         ),
+        body: _buildTextComposer(),
         floatingActionButton: _writeButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked, 
       );
@@ -195,11 +191,15 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
     return  IconTheme(
       data: IconThemeData(color: Theme.of(context).accentColor),
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8.0),
+        alignment: Alignment.topCenter,
+        margin: EdgeInsets.symmetric(horizontal: 48.0, vertical: 30.0),
         child:  Row(                         
           children: [                           
             Flexible(                          
               child:  TextField(
+                focusNode: myFocusNode,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
                 controller: _textController,
                 onChanged: (String text) {            
                   setState(() {                      
@@ -207,35 +207,22 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
                   });                                
                 }, 
                 onSubmitted: _isComposing ? _handleSubmitted : null,
-                decoration:  InputDecoration.collapsed(
-                    hintText: 'Send a message'),
-                focusNode: _focusNode,
+                decoration: new InputDecoration(
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                ),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  letterSpacing: 1.0,
+                  height: 1.5,
+                ),
+
               ),
             ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 4.0),
-              child:  Theme.of(context).platform == TargetPlatform.iOS ?
-              CupertinoButton(                                          
-                child: Text('Send'),                                    
-                onPressed: _isComposing                                 
-                    ? () =>  _handleSubmitted(_textController.text)     
-                    : null,) :
-              IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: _isComposing
-                  ? () => _handleSubmitted(_textController.text)
-                  : null,
-                )
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-              child: IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: _isComposing
-                  ? () => _handleSubmitted(_textController.text)
-                  : null,
-                )
-            )                  
           ],                                    
         ),                                     
       ),
@@ -261,16 +248,17 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
       setState((){
         _edit = false;
         _editbuttoncollor = Colors.white;
+        if (_isComposing == true){
+          _handleSubmitted(_textController.text);
+        }
       });
     }else{
       setState((){
         _edit = true;
         _editbuttoncollor = Colors.brown ;
+        myFocusNode.requestFocus();
       });  
     }
-    //setState((){
-    //  _edit = true;
-    //});
   }
 
   @override
