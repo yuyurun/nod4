@@ -107,6 +107,9 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   bool _isComposing = false; 
+  bool _edit = false;
+  Color _editbuttoncollor = Colors.white;
+
   String getTodayDate() {
     initializeDateFormatting('ja');
     return DateFormat.Md('ja').format(DateTime.now()).toString(); //yMMMd
@@ -141,40 +144,51 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('あしあと'),
-        elevation:
-          Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
-      ), 
-      body: Container(
-        child: Column(
-        children: [
-          Flexible(
-            child: ListView.builder(
-              padding: EdgeInsets.all(8.0),
-              reverse: false,
-              itemBuilder: (_, int index) => _messages[index],
-              itemCount: _messages.length,
+    if (_edit == false){
+      return Scaffold(
+        appBar: AppBar(title: Text('あしあと'),
+          elevation:
+            Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
+        ), 
+        body: Container(
+          child: Column(
+          children: [
+            Flexible(
+              child: ListView.builder(
+                padding: EdgeInsets.all(8.0),
+                reverse: false,
+                itemBuilder: (_, int index) => _messages[index],
+                itemCount: _messages.length,
+              ),
             ),
-          ),
-          //Divider(height: 1.0),
-          //Container(
-          //  decoration: BoxDecoration(
-          //    color: Colors.white),//Theme.of(context).cardColor),
-          //    child: _writeButton(),//_buildTextComposer(),
-          //),
-        ],
-      ),
-      decoration: Theme.of(context).platform == TargetPlatform.iOS 
-            ? BoxDecoration(                                 
-                border: Border(                              
-                  top: BorderSide(color: Colors.grey[200]!), 
-                ),                                           
-              )                                              
-            : null),
-    floatingActionButton: _writeButton(),
-    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
+            //Divider(height: 1.0),
+            //Container(
+            //  decoration: BoxDecoration(
+            //    color: Colors.white),//Theme.of(context).cardColor),
+            //    child: _writeButton(),//_buildTextComposer(),
+            //),
+          ],
+        ),
+        decoration: Theme.of(context).platform == TargetPlatform.iOS 
+              ? BoxDecoration(                                 
+                  border: Border(                              
+                    top: BorderSide(color: Colors.grey[200]!), 
+                  ),                                           
+                )                                              
+              : null),
+      floatingActionButton: _writeButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(title: Text('あしあと'),
+          elevation:
+            Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
+        ),
+        floatingActionButton: _writeButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked, 
+      );
+    }
   }
 
   Widget _buildTextComposer() {
@@ -231,15 +245,32 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       child: CircleAvatar(
-        backgroundColor: Colors.white,//Color(0xffffb6b9),//
+        backgroundColor: _editbuttoncollor,//Colors.white,//Color(0xffffb6b9),//
         maxRadius: 30.0,
         child: IconButton(
           iconSize: 40.0,
           icon: const Icon(Icons.create_sharp),
-          onPressed: () {},
+          onPressed: _editStart,// () {},
         )
       )
     ); 
+  }
+
+  void _editStart(){
+    if (_edit == true){
+      setState((){
+        _edit = false;
+        _editbuttoncollor = Colors.white;
+      });
+    }else{
+      setState((){
+        _edit = true;
+        _editbuttoncollor = Colors.brown ;
+      });  
+    }
+    //setState((){
+    //  _edit = true;
+    //});
   }
 
   @override
