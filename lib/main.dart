@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart'; 
 import 'package:flutter/foundation.dart'; 
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(
@@ -9,19 +11,16 @@ void main() {
 }
 
 final ThemeData kIOSTheme = ThemeData(
-  primarySwatch: Colors.deepOrange,
-  primaryColor: Colors.grey[100],
+  primarySwatch: Colors.brown,
+  primaryColor: Color(0xfffcd1d1), //Colors.red[100],
   primaryColorBrightness: Brightness.light,
 );
 
 final ThemeData kDefaultTheme = ThemeData(
   primarySwatch: Colors.purple,
-  accentColor: Colors.orangeAccent[400],
+  accentColor: Colors.orangeAccent[200],
 );
 
-
-//認証によって送信者の名前取得できるといいね
-String _date = '5/3';
 
 class FriendlyChatApp extends StatelessWidget {
   const FriendlyChatApp({
@@ -41,8 +40,10 @@ class FriendlyChatApp extends StatelessWidget {
 }
 
 class ChatMessage extends StatelessWidget {
-  ChatMessage({required this.text, required this.animationController});
+  ChatMessage({required this.text, required this.date, required this.time, required this.animationController});
   final String text;
+  final String date;
+  final String time;
   final AnimationController animationController;
   @override
   Widget build(BuildContext context) {
@@ -52,7 +53,7 @@ class ChatMessage extends StatelessWidget {
       axisAlignment: 0.0,              
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.teal.shade200,
+          color: Color(0xffece2e1), //Colors.teal.shade100,
           // 枠線
           //border: Border.all(color: Colors.lime, width: 5),
           borderRadius: BorderRadius.circular(12), // 角丸
@@ -63,7 +64,7 @@ class ChatMessage extends StatelessWidget {
           children: [
             Container(
               margin: const EdgeInsets.only(right: 15.0,left: 18.0, top: 10.0, bottom: 10.0),
-              child: CircleAvatar(backgroundColor: Colors.white, child: Text(_date),foregroundColor: Colors.teal.shade400,),
+              child: CircleAvatar(backgroundColor: Colors.white, child: Text(date),foregroundColor: Color(0xff766161),),//Colors.teal.shade400,),
             ),
             Expanded(
               child: Column(
@@ -71,8 +72,20 @@ class ChatMessage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(top: 10.0, right: 18.0, bottom: 10.0),
-                    child: Text(text),
+                    margin: EdgeInsets.only(top: 10.0),//, right: 18.0, bottom: 10.0),
+                    child: Text(time)//, style: TextStyle(decoration: TextDecoration.underline, decorationStyle: TextDecorationStyle.dashed),),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 2.0, right: 18.0, bottom: 10.0),
+                    child: Text(
+                      text,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                        letterSpacing: 0.5,
+                        //color: Theme.of(context).primaryColor,
+                        ),
+                    ),
                   ),
                 ],
               ),
@@ -94,6 +107,15 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
   final _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   bool _isComposing = false; 
+  String getTodayDate() {
+    initializeDateFormatting('ja');
+    return DateFormat.Md('ja').format(DateTime.now()).toString(); //yMMMd
+  }
+  String getTime() {
+    initializeDateFormatting('ja');
+    return DateFormat.Hm('ja').format(DateTime.now()).toString(); //yMMMd
+  }
+
 
   void _handleSubmitted(String text) {
     _textController.clear();
@@ -103,6 +125,8 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
 
     ChatMessage message = ChatMessage(
       text: text,
+      date: getTodayDate(),
+      time: getTime(),
       animationController: AnimationController(
         duration: const Duration(milliseconds: 700),
         vsync: this,
@@ -163,7 +187,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
                 controller: _textController,
                 onChanged: (String text) {            
                   setState(() {                      
-                    _isComposing = text.isNotEmpty;   
+                    _isComposing = text.isNotEmpty;
                   });                                
                 }, 
                 onSubmitted: _isComposing ? _handleSubmitted : null,
