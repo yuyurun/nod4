@@ -9,7 +9,7 @@ void main() {
 }
 
 final ThemeData kIOSTheme = ThemeData(
-  primarySwatch: Colors.orange,
+  primarySwatch: Colors.deepOrange,
   primaryColor: Colors.grey[100],
   primaryColorBrightness: Brightness.light,
 );
@@ -21,7 +21,7 @@ final ThemeData kDefaultTheme = ThemeData(
 
 
 //認証によって送信者の名前取得できるといいね
-String _name = 'りこ';
+String _date = '5/3';
 
 class FriendlyChatApp extends StatelessWidget {
   const FriendlyChatApp({
@@ -31,7 +31,7 @@ class FriendlyChatApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'チャットだよ',
+      title: 'あしあと',
       theme: defaultTargetPlatform == TargetPlatform.iOS 
         ? kIOSTheme                                      
         : kDefaultTheme,   
@@ -51,29 +51,35 @@ class ChatMessage extends StatelessWidget {
           CurvedAnimation(parent: animationController, curve: Curves.easeOut),  
       axisAlignment: 0.0,              
       child: Container(
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(child: Text(_name[0])),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(_name, style: Theme.of(context).textTheme.headline4),
-                Container(
-                  margin: EdgeInsets.only(top: 5.0),
-                  child: Text(text),
-                ),
-              ],
+        decoration: BoxDecoration(
+          color: Colors.teal.shade200,
+          // 枠線
+          //border: Border.all(color: Colors.lime, width: 5),
+          borderRadius: BorderRadius.circular(12), // 角丸
+        ),
+        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(right: 15.0,left: 18.0, top: 10.0, bottom: 10.0),
+              child: CircleAvatar(backgroundColor: Colors.white, child: Text(_date),foregroundColor: Colors.teal.shade400,),
             ),
-          ),
-        ],
-      ),
-    )
+            Expanded(
+              child: Column(
+
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 10.0, right: 18.0, bottom: 10.0),
+                    child: Text(text),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      )
     );
   }
 }
@@ -112,7 +118,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('チャットだよ'),
+      appBar: AppBar(title: Text('あしあと'),
         elevation:
           Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
       ), 
