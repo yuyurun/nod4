@@ -152,7 +152,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
           Flexible(
             child: ListView.builder(
               padding: EdgeInsets.all(8.0),
-              reverse: true,
+              reverse: false,
               itemBuilder: (_, int index) => _messages[index],
               itemCount: _messages.length,
             ),
