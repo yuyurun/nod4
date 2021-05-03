@@ -157,12 +157,12 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
               itemCount: _messages.length,
             ),
           ),
-          Divider(height: 1.0),
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor),
-              child: _buildTextComposer(),
-          ),
+          //Divider(height: 1.0),
+          //Container(
+          //  decoration: BoxDecoration(
+          //    color: Colors.white),//Theme.of(context).cardColor),
+          //    child: _writeButton(),//_buildTextComposer(),
+          //),
         ],
       ),
       decoration: Theme.of(context).platform == TargetPlatform.iOS 
@@ -172,6 +172,8 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
                 ),                                           
               )                                              
             : null),
+    floatingActionButton: _writeButton(),
+    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -210,11 +212,34 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
                   ? () => _handleSubmitted(_textController.text)
                   : null,
                 )
-            )                                    
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+              child: IconButton(
+                icon: const Icon(Icons.send),
+                onPressed: _isComposing
+                  ? () => _handleSubmitted(_textController.text)
+                  : null,
+                )
+            )                  
           ],                                    
         ),                                     
       ),
     );
+  }
+  Widget _writeButton(){
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+      child: CircleAvatar(
+        backgroundColor: Colors.white,//Color(0xffffb6b9),//
+        maxRadius: 30.0,
+        child: IconButton(
+          iconSize: 40.0,
+          icon: const Icon(Icons.create_sharp),
+          onPressed: () {},
+        )
+      )
+    ); 
   }
 
   @override
