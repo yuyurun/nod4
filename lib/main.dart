@@ -110,6 +110,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
   bool _edit = false;
   Color _editbuttoncollor = Colors.white;
   final myFocusNode = FocusNode();
+  Icon _editbutton = Icon(Icons.create_sharp);
 
   String getTodayDate() {
     initializeDateFormatting('ja');
@@ -236,7 +237,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
         maxRadius: 30.0,
         child: IconButton(
           iconSize: 40.0,
-          icon: const Icon(Icons.create_sharp),
+          icon: _editbutton,
           onPressed: _editStart,// () {},
         )
       )
@@ -248,6 +249,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
       setState((){
         _edit = false;
         _editbuttoncollor = Colors.white;
+        _editbutton = Icon(Icons.create_sharp);
         if (_isComposing == true){
           _handleSubmitted(_textController.text);
         }
@@ -256,6 +258,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
       setState((){
         _edit = true;
         _editbuttoncollor = Colors.brown ;
+        _editbutton = Icon(Icons.done_outline_sharp);
         myFocusNode.requestFocus();
       });  
     }
