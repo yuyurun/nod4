@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+//import 'package:flutter_speech/flutter_speech.dart';
 
 void main() {
   runApp(
@@ -146,6 +147,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final bottomSpace = MediaQuery.of(context).viewInsets.bottom;
     if (_edit == false){
       return Scaffold(
         appBar: AppBar(title: Text('あしあと'),
@@ -177,12 +179,18 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
       );
     } else {
       return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(title: Text('あしあと'),
           elevation:
             Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
         ),
         body: _buildTextComposer(),
-        floatingActionButton: _writeButton(),
+        floatingActionButton:  SingleChildScrollView(
+          reverse: true,
+          child: Padding(
+        padding: EdgeInsets.only(bottom: bottomSpace),//Container(
+            child: _writeButton(),
+            )),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked, 
       );
     }
@@ -231,7 +239,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
   }
   Widget _writeButton(){
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
       child: CircleAvatar(
         backgroundColor: _editbuttoncollor,//Colors.white,//Color(0xffffb6b9),//
         maxRadius: 30.0,
@@ -260,6 +268,7 @@ class _ChatscreenState extends State<Chatscreen> with TickerProviderStateMixin {
         _editbuttoncollor = Colors.brown ;
         _editbutton = Icon(Icons.done_outline_sharp);
         myFocusNode.requestFocus();
+
       });  
     }
   }
